@@ -1,0 +1,45 @@
+﻿<Window x:Class="BoardifyApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:BoardifyApp.ViewModels"
+        xmlns:views="clr-namespace:BoardifyApp.Views"
+        Title="Boardify"
+        Height="450" Width="800"
+        MinHeight="450" MinWidth="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+
+    <ContentControl Content="{Binding CurrentViewModel}" >
+        <ContentControl.Resources>
+            <DataTemplate DataType="{x:Type vm:MainViewModel}">
+                <StackPanel Margin="20">
+                    <TextBlock Text="🗂 Boardify" FontSize="28" Margin="0 0 0 20" />
+
+                    <ItemsControl ItemsSource="{Binding Boards}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#EEE" CornerRadius="5" Margin="0 5">
+                                    <Button Padding="10"
+                                            Content="{Binding Board.Name}"
+                                            Command="{Binding DataContext.OpenBoardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}"
+                                            Background="Transparent" BorderBrush="{x:Null}" FontSize="18" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <Button Content="Создать доску" Command="{Binding CreateBoardCommand}"
+                            Margin="0 20 0 0" Padding="10" Background="#4CAF50" Foreground="White" FontSize="18" FontWeight="bold" />
+                </StackPanel>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:BoardViewModel}">
+                <views:BoardView />
+            </DataTemplate>
+        </ContentControl.Resources>
+    </ContentControl>
+</Window>
