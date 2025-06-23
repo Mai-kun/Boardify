@@ -21,19 +21,18 @@
                     <ItemsControl ItemsSource="{Binding Boards}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Background="#EEE" CornerRadius="5" Margin="0 5">
-                                    <Button Padding="10"
-                                            Content="{Binding Board.Name}"
-                                            Command="{Binding DataContext.OpenBoardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding}"
-                                            Background="Transparent" BorderBrush="{x:Null}" FontSize="18" />
-                                </Border>
+                                <Button Padding="10"
+                                        Content="{Binding Board.Name}"
+                                        Command="{Binding DataContext.OpenBoardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        Background="LightGray" BorderBrush="{x:Null}" FontSize="18" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
 
                     <Button Content="Создать доску" Command="{Binding CreateBoardCommand}"
-                            Margin="0 20 0 0" Padding="10" Background="#4CAF50" Foreground="White" FontSize="18" FontWeight="bold" />
+                               Margin="0 20 0 0" Padding="10" Background="#4CAF50" Foreground="White" FontSize="18" FontWeight="bold" />
+                    
                 </StackPanel>
             </DataTemplate>
 

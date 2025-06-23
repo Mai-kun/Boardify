@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using BoardifyApp.Models;
 using BoardifyApp.Services;
+using BoardifyApp.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -11,7 +12,7 @@ public partial class BoardViewModel : ObservableObject
     private readonly INavigationService _navigationService;
     
     public Board Board { get; }
-    
+
     [ObservableProperty] 
     private ObservableCollection<ColumnViewModel> _columns = [];
     
@@ -29,5 +30,23 @@ public partial class BoardViewModel : ObservableObject
     private void Back()
     {
         _navigationService.NavigateBack();
+    }
+    
+    [RelayCommand]
+    private void OpenAddTaskDialog()
+    {
+        var dialog = new AddTaskDialog(Columns);
+        if (dialog.ShowDialog() != true || dialog.SelectedColumn == null)
+        {
+            return;
+        }
+
+        var newTask = new TaskCard
+        {
+            Title = dialog.TaskTitle,
+            Description = dialog.Description
+        };
+
+        dialog.SelectedColumn.Tasks.Add(new TaskCardViewModel(newTask));
     }
 }

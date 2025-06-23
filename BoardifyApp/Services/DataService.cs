@@ -14,7 +14,14 @@ public class DataService
                 Name = "Личное",
                 Columns =
                 [
-                    new Column { Title = "To Do" },
+                    new Column
+                    {
+                        Title = "To Do",
+                        Tasks = 
+                        [
+                            new TaskCard { Title = "Задача 1Задача 1Задача 1Задача 1Задача 1Задача 1Задача 1Задача 1Задача 1Задача 1" },
+                        ]
+                    },
                     new Column { Title = "In Progress" },
                     new Column { Title = "Done" }
                 ]
