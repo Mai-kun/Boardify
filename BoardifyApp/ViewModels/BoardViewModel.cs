@@ -26,6 +26,17 @@ public partial class BoardViewModel : ObservableObject
         }
     }
 
+    public void MoveTask(TaskCardViewModel task, ColumnViewModel from, ColumnViewModel to)
+    {
+        if (from == to)
+        {
+            return;
+        }
+
+        from.RemoveTask(task);
+        to.AddTask(task);
+    }
+    
     [RelayCommand]
     private void Back()
     {

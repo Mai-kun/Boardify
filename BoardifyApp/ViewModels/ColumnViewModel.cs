@@ -19,4 +19,14 @@ public partial class ColumnViewModel : ObservableObject
             Tasks.Add(new TaskCardViewModel(task));
         }
     }
+
+    public void RemoveTask(TaskCardViewModel task)
+    {
+        Tasks.Remove(task);
+    }
+
+    public void AddTask(TaskCardViewModel task)
+    {
+        Tasks.Add(task);
+    }
 }
