@@ -14,4 +14,19 @@
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resourses\en_lang.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>en_lang.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resourses\en_lang.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>ru_lang.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>
