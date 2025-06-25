@@ -1,14 +1,14 @@
-﻿using System.Windows;
+﻿// ReSharper disable MemberCanBeMadeStatic.Local
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using BoardifyApp.Helpers;
 using BoardifyApp.ViewModels;
 
 namespace BoardifyApp.Views;
 
-public partial class BoardView : UserControl
+public partial class BoardView
 {
     private DragAdorner? _dragAdorner;
     private AdornerLayer? _adornerLayer;
@@ -17,6 +17,98 @@ public partial class BoardView : UserControl
     public BoardView()
     {
         InitializeComponent();
+    }
+    
+    private void BoardView_OnLoaded(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is not BoardViewModel boardViewModel)
+        {
+            return;
+        }
+        ColumnGrid.ColumnDefinitions.Clear();
+        ColumnGrid.Children.Clear();
+
+        for (var i = 0; i < boardViewModel.Columns.Count; i++)
+        {
+            var columnViewModel = boardViewModel.Columns[i];
+
+            AddNewColumnDefinition(new GridLength(columnViewModel.Width, GridUnitType.Pixel));
+            var border = CreateNewBorderInstance(columnViewModel);
+            Grid.SetColumn(border, i * 2);
+            ColumnGrid.Children.Add(border);
+
+            if (i >= boardViewModel.Columns.Count - 1)
+            {
+                continue;
+            }
+
+            var splitter = CreateNewGridSplitterInstance();
+            AddNewColumnDefinition(GridLength.Auto, isSplitter: true);
+            Grid.SetColumn(splitter, i * 2 + 1);
+            ColumnGrid.Children.Add(splitter);
+        }
+    }
+
+    private void AddNewColumnDefinition(GridLength width, bool isSplitter = false)
+    {
+        var columnDefinition = new ColumnDefinition
+        {
+            Width = width,
+            MinWidth = isSplitter ? 0 : 200,
+        };
+        ColumnGrid.ColumnDefinitions.Add(columnDefinition);
+    }
+    
+    private Border CreateNewBorderInstance(ColumnViewModel columnViewModel)
+    {
+        var border = new Border
+        {
+            DataContext = columnViewModel,
+            Child = BuildColumnContent(columnViewModel),
+        };
+        border.SetResourceReference(StyleProperty, "DropHighlightBorder");
+        border.AllowDrop = true;
+        border.DragEnter += Column_DragEnter;
+        border.DragLeave += Column_DragLeave;
+        border.DragOver += Column_DragOver;
+        border.Drop += Column_Drop;
+        return border;
+    }
+    
+    private GridSplitter CreateNewGridSplitterInstance()
+    {
+        return new GridSplitter
+        {
+            Style = FindResource("GridSplitterStyle") as Style,
+        };
+    }
+
+    private StackPanel BuildColumnContent(ColumnViewModel columnViewModel)
+    {
+        var textBox = new TextBox
+        {
+            Text = columnViewModel.Column.Title,
+            Style = FindResource("TextBoxColumnHeaderStyle") as Style,
+            IsReadOnly = true,
+        };
+        textBox.MouseDoubleClick += (_, _) => textBox.IsReadOnly = false;
+        textBox.LostFocus += (_, _) => textBox.IsReadOnly = true;
+        
+        var itemsControl = new ItemsControl
+        {
+            ItemsSource = columnViewModel.Tasks,
+            ItemTemplate = (DataTemplate)FindResource("TaskCardTemplate"),
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children =
+            {
+                textBox,
+                itemsControl,
+            },
+        };
     }
 
     private void TaskCard_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -27,29 +119,20 @@ public partial class BoardView : UserControl
         }
 
         _dragStartPoint = e.GetPosition(border);
-        
+
         border.Visibility = Visibility.Hidden;
-        
-        var visual = new Border
+        var visual = new Border 
         {
-            CornerRadius = new CornerRadius(5),
+            Style = FindResource("TaskCardStyle") as Style,
             Width = border.ActualWidth,
             Height = border.ActualHeight,
-            Background = border.Background,
-            BorderBrush = Brushes.Black,
-            BorderThickness = new Thickness(1),
             Child = new TextBlock
             {
-                Margin = new Thickness(3),
+                Style = FindResource("TextInTaskCardStyle") as Style,
                 Text = viewModel.TaskCard.Title,
-                FontSize = 12,
-                Padding = new Thickness(5),
-                TextWrapping = TextWrapping.Wrap
             },
-            Opacity = 1
         };
-        
-        
+
         _adornerLayer = AdornerLayer.GetAdornerLayer(this);
         if (_adornerLayer is not null)
         {
@@ -68,10 +151,10 @@ public partial class BoardView : UserControl
             _dragAdorner = null;
             border.Visibility = Visibility.Visible;
         }
-        
+
         GiveFeedback -= BoardView_GiveFeedback;
     }
-    
+
     private void BoardView_GiveFeedback(object sender, GiveFeedbackEventArgs e)
     {
         if (_dragAdorner != null && _adornerLayer != null)

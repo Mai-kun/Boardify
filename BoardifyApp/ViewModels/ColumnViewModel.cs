@@ -9,11 +9,15 @@ public partial class ColumnViewModel : ObservableObject
     public Column Column { get; }
 
     [ObservableProperty]
+    private double _width = 250;
+    
+    [ObservableProperty]
     private ObservableCollection<TaskCardViewModel> _tasks = [];
 
     public ColumnViewModel(Column column)
     {
         Column = column;
+        Width = _width;
         foreach (var task in column.Tasks)
         {
             Tasks.Add(new TaskCardViewModel(task));
