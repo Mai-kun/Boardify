@@ -1,18 +1,13 @@
-﻿using System.Windows;
-using BoardifyApp.Services;
-using BoardifyApp.ViewModels;
+﻿// ReSharper disable AsyncVoidMethod
+
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace BoardifyApp;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
-    public static IHost? AppHost  { get; private set; }
-
     public App()
     {
         AppHost = Host.CreateDefaultBuilder()
@@ -25,7 +20,9 @@ public partial class App : Application
             })
             .Build();
     }
-    
+
+    private static IHost? AppHost { get; set; }
+
     protected override async void OnStartup(StartupEventArgs e)
     {
         await AppHost!.StartAsync();

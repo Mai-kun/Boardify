@@ -10,21 +10,27 @@ namespace BoardifyApp.ViewModels;
 public partial class BoardViewModel : ObservableObject
 {
     private readonly INavigationService _navigationService;
-    
-    public Board Board { get; }
 
-    [ObservableProperty] 
+    [ObservableProperty]
     private ObservableCollection<ColumnViewModel> _columns = [];
-    
-    public BoardViewModel(Board board, INavigationService navigationService)
+
+    public BoardViewModel(Board board, INavigationService navigationService, AppSettings? settings = null)
     {
         Board = board;
         _navigationService = navigationService;
         foreach (var col in board.Columns)
         {
-            Columns.Add(new ColumnViewModel(col));
+            var columnViewModel = new ColumnViewModel(col);
+            if (settings is not null && settings.ColumnWidths.TryGetValue(col.Title, out var width))
+            {
+                columnViewModel.Width = width;
+            }
+
+            Columns.Add(columnViewModel);
         }
     }
+
+    public Board Board { get; }
 
     public void MoveTask(TaskCardViewModel task, ColumnViewModel from, ColumnViewModel to)
     {
@@ -36,13 +42,13 @@ public partial class BoardViewModel : ObservableObject
         from.RemoveTask(task);
         to.AddTask(task);
     }
-    
+
     [RelayCommand]
     private void Back()
     {
         _navigationService.NavigateBack();
     }
-    
+
     [RelayCommand]
     private void OpenAddTaskDialog()
     {
@@ -55,7 +61,7 @@ public partial class BoardViewModel : ObservableObject
         var newTask = new TaskCard
         {
             Title = dialog.TaskTitle,
-            Description = dialog.Description
+            Description = dialog.Description,
         };
 
         dialog.SelectedColumn.Tasks.Add(new TaskCardViewModel(newTask));

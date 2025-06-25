@@ -76,7 +76,7 @@
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Cursor" Value="SizeWE" />
-        <Setter Property="ResizeBehavior" Value="PreviousAndNext" />
+        <Setter Property="ResizeBehavior" Value="PreviousAndCurrent" />
         <Setter Property="ResizeDirection" Value="Columns" />
     </Style>
 
@@ -87,13 +87,13 @@
         <Setter Property="Margin" Value="0 0 0 10" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderThickness" Value="0" />
-    
+
         <Style.Triggers>
             <Trigger Property="IsReadOnly" Value="True">
-                    <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="BorderThickness" Value="0" />
             </Trigger>
             <Trigger Property="IsReadOnly" Value="False">
-                <Setter Property="BorderThickness" Value="2"/>
+                <Setter Property="BorderThickness" Value="2" />
             </Trigger>
         </Style.Triggers>
     </Style>

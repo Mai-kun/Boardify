@@ -1,4 +1,5 @@
 ﻿// ReSharper disable MemberCanBeMadeStatic.Local
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -10,21 +11,22 @@ namespace BoardifyApp.Views;
 
 public partial class BoardView
 {
-    private DragAdorner? _dragAdorner;
     private AdornerLayer? _adornerLayer;
+    private DragAdorner? _dragAdorner;
     private Point _dragStartPoint;
 
     public BoardView()
     {
         InitializeComponent();
     }
-    
+
     private void BoardView_OnLoaded(object sender, RoutedEventArgs e)
     {
         if (DataContext is not BoardViewModel boardViewModel)
         {
             return;
         }
+
         ColumnGrid.ColumnDefinitions.Clear();
         ColumnGrid.Children.Clear();
 
@@ -37,13 +39,8 @@ public partial class BoardView
             Grid.SetColumn(border, i * 2);
             ColumnGrid.Children.Add(border);
 
-            if (i >= boardViewModel.Columns.Count - 1)
-            {
-                continue;
-            }
-
-            var splitter = CreateNewGridSplitterInstance();
-            AddNewColumnDefinition(GridLength.Auto, isSplitter: true);
+            var splitter = CreateNewGridSplitterInstance(i * 2, columnViewModel);
+            AddNewColumnDefinition(GridLength.Auto, true);
             Grid.SetColumn(splitter, i * 2 + 1);
             ColumnGrid.Children.Add(splitter);
         }
@@ -58,7 +55,7 @@ public partial class BoardView
         };
         ColumnGrid.ColumnDefinitions.Add(columnDefinition);
     }
-    
+
     private Border CreateNewBorderInstance(ColumnViewModel columnViewModel)
     {
         var border = new Border
@@ -74,13 +71,18 @@ public partial class BoardView
         border.Drop += Column_Drop;
         return border;
     }
-    
-    private GridSplitter CreateNewGridSplitterInstance()
+
+    private GridSplitter CreateNewGridSplitterInstance(int columnCount, ColumnViewModel columnViewModel)
     {
-        return new GridSplitter
+        var splitter = new GridSplitter
         {
             Style = FindResource("GridSplitterStyle") as Style,
         };
+        splitter.DragCompleted += (_, _) =>
+        {
+            columnViewModel.Width = ColumnGrid.ColumnDefinitions[columnCount].Width.Value;
+        };
+        return splitter;
     }
 
     private StackPanel BuildColumnContent(ColumnViewModel columnViewModel)
@@ -93,7 +95,7 @@ public partial class BoardView
         };
         textBox.MouseDoubleClick += (_, _) => textBox.IsReadOnly = false;
         textBox.LostFocus += (_, _) => textBox.IsReadOnly = true;
-        
+
         var itemsControl = new ItemsControl
         {
             ItemsSource = columnViewModel.Tasks,
@@ -121,7 +123,7 @@ public partial class BoardView
         _dragStartPoint = e.GetPosition(border);
 
         border.Visibility = Visibility.Hidden;
-        var visual = new Border 
+        var visual = new Border
         {
             Style = FindResource("TaskCardStyle") as Style,
             Width = border.ActualWidth,
