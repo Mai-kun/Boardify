@@ -82,6 +82,10 @@ public partial class BoardView
         {
             columnViewModel.Width = ColumnGrid.ColumnDefinitions[columnCount].Width.Value;
         };
+        splitter.MouseDoubleClick += (_, _) =>
+        {
+            ColumnGrid.ColumnDefinitions[columnCount].Width = new GridLength(250, GridUnitType.Pixel);
+        };
         return splitter;
     }
 
