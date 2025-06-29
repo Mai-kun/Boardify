@@ -6,6 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using BoardifyApp.Helpers;
 using BoardifyApp.ViewModels;
+using MaterialDesignThemes.Wpf;
 
 namespace BoardifyApp.Views;
 
@@ -35,7 +36,7 @@ public partial class BoardView
             var columnViewModel = boardViewModel.Columns[i];
 
             AddNewColumnDefinition(new GridLength(columnViewModel.Width, GridUnitType.Pixel));
-            var border = CreateNewBorderInstance(columnViewModel);
+            var border = CreateNewColumnInstance(columnViewModel);
             Grid.SetColumn(border, i * 2);
             ColumnGrid.Children.Add(border);
 
@@ -56,7 +57,7 @@ public partial class BoardView
         ColumnGrid.ColumnDefinitions.Add(columnDefinition);
     }
 
-    private Border CreateNewBorderInstance(ColumnViewModel columnViewModel)
+    private Border CreateNewColumnInstance(ColumnViewModel columnViewModel)
     {
         var border = new Border
         {
@@ -70,6 +71,36 @@ public partial class BoardView
         border.DragOver += Column_DragOver;
         border.Drop += Column_Drop;
         return border;
+    }
+
+    private StackPanel BuildColumnContent(ColumnViewModel columnViewModel)
+    {
+        var textBox = new TextBox
+        {
+            Text = columnViewModel.Column.Title,
+            Style = (Style)FindResource("MaterialDesignOutlinedTextBox"),
+            Margin = new Thickness(0, 0, 0, 8),
+            IsReadOnly = true,
+        };
+        HintAssist.SetHint(textBox, "Column Title");
+        textBox.MouseDoubleClick += (_, _) => textBox.IsReadOnly = false;
+        textBox.LostFocus += (_, _) => textBox.IsReadOnly = true;
+
+        var card = new ItemsControl
+        {
+            ItemsSource = columnViewModel.Tasks,
+            ItemTemplate = FindResource("TaskCardTemplate") as DataTemplate,
+        };
+
+        return new StackPanel
+        {
+            Orientation = Orientation.Vertical,
+            Children =
+            {
+                textBox,
+                card,
+            },
+        };
     }
 
     private GridSplitter CreateNewGridSplitterInstance(int columnCount, ColumnViewModel columnViewModel)
@@ -89,74 +120,41 @@ public partial class BoardView
         return splitter;
     }
 
-    private StackPanel BuildColumnContent(ColumnViewModel columnViewModel)
-    {
-        var textBox = new TextBox
-        {
-            Text = columnViewModel.Column.Title,
-            Style = FindResource("TextBoxColumnHeaderStyle") as Style,
-            IsReadOnly = true,
-        };
-        textBox.MouseDoubleClick += (_, _) => textBox.IsReadOnly = false;
-        textBox.LostFocus += (_, _) => textBox.IsReadOnly = true;
-
-        var itemsControl = new ItemsControl
-        {
-            ItemsSource = columnViewModel.Tasks,
-            ItemTemplate = (DataTemplate)FindResource("TaskCardTemplate"),
-        };
-
-        return new StackPanel
-        {
-            Orientation = Orientation.Vertical,
-            Children =
-            {
-                textBox,
-                itemsControl,
-            },
-        };
-    }
-
     private void TaskCard_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
-        if (sender is not Border { DataContext: TaskCardViewModel viewModel } border)
+        if (sender is not Card { DataContext: TaskCardViewModel viewModel } card)
         {
             return;
         }
 
-        _dragStartPoint = e.GetPosition(border);
+        _dragStartPoint = e.GetPosition(card);
 
-        border.Visibility = Visibility.Hidden;
-        var visual = new Border
+        card.Visibility = Visibility.Hidden;
+        var contentPresenter = new ContentPresenter
         {
-            Style = FindResource("TaskCardStyle") as Style,
-            Width = border.ActualWidth,
-            Height = border.ActualHeight,
-            Child = new TextBlock
-            {
-                Style = FindResource("MaterialDesignButtonTextBlock") as Style,
-                TextWrapping = TextWrapping.Wrap,
-                Text = viewModel.TaskCard.Title,
-            },
+            Content = viewModel,
+            ContentTemplate = FindResource("TaskCardTemplate") as DataTemplate,
+            Width = card.ActualWidth,
+            Height = card.ActualHeight,
         };
 
         _adornerLayer = AdornerLayer.GetAdornerLayer(this);
         if (_adornerLayer is not null)
         {
-            _dragAdorner = new DragAdorner(this, visual);
+            _dragAdorner = new DragAdorner(this, contentPresenter);
             _adornerLayer.Add(_dragAdorner);
         }
 
         GiveFeedback += BoardView_GiveFeedback;
 
         var data = new DataObject(typeof(TaskCardViewModel), viewModel);
-        DragDrop.DoDragDrop(border, data, DragDropEffects.Move);
+        DragDrop.DoDragDrop(card, data, DragDropEffects.Move);
 
         if (_dragAdorner is not null && _adornerLayer is not null)
         {
             _adornerLayer.Remove(_dragAdorner);
             _dragAdorner = null;
-            border.Visibility = Visibility.Visible;
+            card.Visibility = Visibility.Visible;
         }
 
         GiveFeedback -= BoardView_GiveFeedback;

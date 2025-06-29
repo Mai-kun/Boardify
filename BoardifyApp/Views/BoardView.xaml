@@ -5,6 +5,7 @@
              xmlns:helpers="clr-namespace:BoardifyApp.Helpers"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              d:DataContext="{d:DesignInstance Type=vm:BoardViewModel}"
              Loaded="BoardView_OnLoaded"
@@ -16,14 +17,14 @@
                 <ResourceDictionary Source="pack://application:,,,/BoardifyApp;component/Styles/DropStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate x:Key="TaskCardTemplate"
-                          DataType="vm:TaskCardViewModel">
-                <Border Style="{StaticResource TaskCardStyle}"
-                        PreviewMouseLeftButtonDown="TaskCard_PreviewMouseLeftButtonDown"
-                        Cursor="Hand">
-                    <TextBlock Text="{Binding TaskCard.Title}" TextWrapping="Wrap"
-                               Style="{StaticResource MaterialDesignButtonTextBlock}" />
-                </Border>
+            <DataTemplate x:Key="TaskCardTemplate" DataType="{x:Type vm:TaskCardViewModel}">
+                <materialDesign:Card
+                    PreviewMouseLeftButtonDown="TaskCard_PreviewMouseLeftButtonDown">
+
+                    <TextBlock Text="{Binding TaskCard.Title}"
+                               TextWrapping="Wrap"
+                               FontSize="14" Padding="5" />
+                </materialDesign:Card>
             </DataTemplate>
         </ResourceDictionary>
     </UserControl.Resources>

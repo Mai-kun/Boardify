@@ -48,54 +48,15 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="ButtonStyle" TargetType="Button">
-        <Setter Property="Background" Value="#E0E0E0" />
-        <Setter Property="Padding" Value="6" />
-        <Setter Property="Margin" Value="10" />
-        <Setter Property="FontSize" Value="14" />
-    </Style>
-
-    <Style x:Key="TaskCardStyle" TargetType="Border">
-        <Setter Property="Background" Value="#d8e6f5" />
-        <Setter Property="BorderBrush" Value="#CCC" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="CornerRadius" Value="5" />
-        <Setter Property="Padding" Value="5" />
-        <Setter Property="Margin" Value="0 5" />
-    </Style>
-
-    <Style x:Key="TextInTaskCardStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="12" />
-        <Setter Property="TextWrapping" Value="Wrap" />
-    </Style>
-
     <Style x:Key="GridSplitterStyle" TargetType="GridSplitter">
-        <Setter Property="Width" Value="2" />
-        <Setter Property="Background" Value="#50000000" />
+        <Setter Property="Background" Value="{DynamicResource MaterialDesignDivider}" />
+        <Setter Property="Width" Value="5" />
         <Setter Property="Margin" Value="0 50 0 50" />
         <Setter Property="HorizontalAlignment" Value="Right" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Cursor" Value="SizeWE" />
         <Setter Property="ResizeBehavior" Value="PreviousAndCurrent" />
         <Setter Property="ResizeDirection" Value="Columns" />
-    </Style>
-
-    <Style x:Key="TextBoxColumnHeaderStyle" TargetType="TextBox">
-        <Setter Property="FontWeight" Value="Bold" />
-        <Setter Property="FontSize" Value="18" />
-        <Setter Property="TextAlignment" Value="Center" />
-        <Setter Property="Margin" Value="0 0 0 10" />
-        <Setter Property="Background" Value="Transparent" />
-        <Setter Property="BorderThickness" Value="0" />
-
-        <Style.Triggers>
-            <Trigger Property="IsReadOnly" Value="True">
-                <Setter Property="BorderThickness" Value="0" />
-            </Trigger>
-            <Trigger Property="IsReadOnly" Value="False">
-                <Setter Property="BorderThickness" Value="2" />
-            </Trigger>
-        </Style.Triggers>
     </Style>
 
 </ResourceDictionary>
