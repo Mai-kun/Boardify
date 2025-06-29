@@ -134,7 +134,8 @@ public partial class BoardView
             Height = border.ActualHeight,
             Child = new TextBlock
             {
-                Style = FindResource("TextInTaskCardStyle") as Style,
+                Style = FindResource("MaterialDesignButtonTextBlock") as Style,
+                TextWrapping = TextWrapping.Wrap,
                 Text = viewModel.TaskCard.Title,
             },
         };

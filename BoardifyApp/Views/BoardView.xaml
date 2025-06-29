@@ -15,13 +15,14 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/BoardifyApp;component/Styles/DropStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        
+
             <DataTemplate x:Key="TaskCardTemplate"
                           DataType="vm:TaskCardViewModel">
                 <Border Style="{StaticResource TaskCardStyle}"
                         PreviewMouseLeftButtonDown="TaskCard_PreviewMouseLeftButtonDown"
                         Cursor="Hand">
-                    <TextBlock Text="{Binding TaskCard.Title}" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding TaskCard.Title}" TextWrapping="Wrap"
+                               Style="{StaticResource MaterialDesignButtonTextBlock}" />
                 </Border>
             </DataTemplate>
         </ResourceDictionary>
@@ -41,10 +42,14 @@
 
             <StackPanel Grid.Column="1" Orientation="Horizontal"
                         HorizontalAlignment="Right" VerticalAlignment="Center">
-                <Button Style="{StaticResource ButtonStyle}" Content="{helpers:Loc BoardView_AddTaskButton}"
+                <Button Content="{helpers:Loc BoardView_AddTaskButton}"
+                        Foreground="White"
+                        Margin="10 0 10 0"
                         Command="{Binding OpenAddTaskDialogCommand}" />
 
-                <Button Style="{StaticResource ButtonStyle}" Content="{helpers:Loc BoardView_BackButton}"
+                <Button Content="{helpers:Loc BoardView_BackButton}"
+                        Foreground="White"
+                        Margin="10 0 10 0"
                         Command="{Binding BackCommand}" />
             </StackPanel>
         </Grid>
@@ -53,6 +58,6 @@
             <Grid Name="ColumnGrid">
                 <!-- Nothing here -->
             </Grid>
-        </ScrollViewer>        
+        </ScrollViewer>
     </DockPanel>
 </UserControl>

@@ -4,9 +4,15 @@
         xmlns:vm="clr-namespace:BoardifyApp.ViewModels"
         xmlns:views="clr-namespace:BoardifyApp.Views"
         xmlns:helpers="clr-namespace:BoardifyApp.Helpers"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Boardify"
         MinHeight="450" MinWidth="800"
-        WindowStartupLocation="CenterScreen">
+        TextElement.Foreground="{DynamicResource MaterialDesign.Brush.Foreground}"
+        Background="{DynamicResource MaterialDesign.Brush.Background}"
+        TextElement.FontWeight="Medium"
+        TextElement.FontSize="14"
+        FontFamily="{materialDesign:MaterialDesignFont}"
+        Style="{StaticResource MaterialDesignWindow}">
 
     <Window.DataContext>
         <vm:MainViewModel />
@@ -15,26 +21,31 @@
     <ContentControl Content="{Binding CurrentViewModel}">
         <ContentControl.Resources>
             <DataTemplate DataType="{x:Type vm:MainViewModel}">
-                <StackPanel Margin="20">
-                    <TextBlock Text="🗂 Boardify" FontSize="28" Margin="0 0 0 20" />
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
 
-                    <ItemsControl ItemsSource="{Binding Boards}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Button Padding="10"
-                                        Content="{Binding Board.Name}"
-                                        Command="{Binding DataContext.OpenBoardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                        CommandParameter="{Binding}"
-                                        Background="LightGray" BorderBrush="{x:Null}" FontSize="18" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    <StackPanel Margin="20">
+                        <TextBlock Text="🗂 Boardify" FontSize="28" Margin="0 0 0 20" />
 
-                    <Button Content="{helpers:Loc MainView_AddNewBoardButton}" Command="{Binding CreateBoardCommand}"
-                            Margin="0 20 0 0" Padding="10" Background="#4CAF50" Foreground="White" FontSize="18"
-                            FontWeight="bold" />
+                        <ItemsControl ItemsSource="{Binding Boards}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Padding="10"
+                                            Content="{Binding Board.Name}"
+                                            Command="{Binding DataContext.OpenBoardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                            CommandParameter="{Binding}"
+                                            Height="40" Margin="0 20 0 0"
+                                            FontSize="18" FontWeight="bold" Foreground="White" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
-                </StackPanel>
+                        <Button Content="{helpers:Loc MainView_AddNewBoardButton}"
+                                Command="{Binding CreateBoardCommand}"
+                                Margin="0 20 0 0" Padding="10" Background="#4CAF50" Foreground="White" FontSize="18"
+                                FontWeight="bold" Height="40" />
+
+                    </StackPanel>
+                </ScrollViewer>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:BoardViewModel}">

@@ -9,24 +9,26 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0"/>
+        <PackageReference Include="MaterialDesignColors" Version="5.2.1"/>
+        <PackageReference Include="MaterialDesignThemes" Version="5.2.1"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6"/>
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Resourses\en_lang.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>en_lang.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+        <EmbeddedResource Update="Resourses\en_lang.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>en_lang.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Resourses\en_lang.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>ru_lang.resx</DependentUpon>
-      </Compile>
+        <Compile Update="Resourses\en_lang.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>ru_lang.resx</DependentUpon>
+        </Compile>
     </ItemGroup>
 
 </Project>
